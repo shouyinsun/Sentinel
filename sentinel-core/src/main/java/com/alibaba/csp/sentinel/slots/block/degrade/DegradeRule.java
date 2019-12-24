@@ -68,11 +68,13 @@ public class DegradeRule extends AbstractRule {
     /**
      * RT threshold or exception ratio threshold count.
      */
+    //rt 或 异常率
     private double count;
 
     /**
      * Degrade recover timeout (in seconds) when degradation occurs.
      */
+    //降级恢复 时间窗口 (s)
     private int timeWindow;
 
     /**
@@ -179,6 +181,7 @@ public class DegradeRule extends AbstractRule {
     // Internal implementation (will be deprecated and moved outside).
 
     private AtomicLong passCount = new AtomicLong(0);
+    //降级中,规则不通过
     private final AtomicBoolean cut = new AtomicBoolean(false);
 
     @Override
@@ -187,12 +190,13 @@ public class DegradeRule extends AbstractRule {
             return false;
         }
 
+        //cluster node
         ClusterNode clusterNode = ClusterBuilderSlot.getClusterNode(this.getResource());
         if (clusterNode == null) {
             return true;
         }
 
-        if (grade == RuleConstant.DEGRADE_GRADE_RT) {
+        if (grade == RuleConstant.DEGRADE_GRADE_RT) {//rt 维度
             double rt = clusterNode.avgRt();
             if (rt < this.count) {
                 passCount.set(0);
@@ -200,15 +204,16 @@ public class DegradeRule extends AbstractRule {
             }
 
             // Sentinel will degrade the service only if count exceeds.
+            // 最小慢请求数,大于这个数才流控
             if (passCount.incrementAndGet() < rtSlowRequestAmount) {
                 return true;
             }
-        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_RATIO) {
+        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_RATIO) {//异常率 维度
             double exception = clusterNode.exceptionQps();
             double success = clusterNode.successQps();
             double total = clusterNode.totalQps();
             // If total amount is less than minRequestAmount, the request will pass.
-            if (total < minRequestAmount) {
+            if (total < minRequestAmount) {//最小请求数,需要大于这个并且异常率高于才流控
                 return true;
             }
 
@@ -222,7 +227,7 @@ public class DegradeRule extends AbstractRule {
             if (exception / success < count) {
                 return true;
             }
-        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT) {
+        } else if (grade == RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT) {//异常数 维度
             double exception = clusterNode.totalException();
             if (exception < count) {
                 return true;
@@ -231,6 +236,7 @@ public class DegradeRule extends AbstractRule {
 
         if (cut.compareAndSet(false, true)) {
             ResetTask resetTask = new ResetTask(this);
+            //降级恢复,时间窗口,多少秒之后
             pool.schedule(resetTask, timeWindow, TimeUnit.SECONDS);
         }
 
@@ -248,6 +254,7 @@ public class DegradeRule extends AbstractRule {
         @Override
         public void run() {
             rule.passCount.set(0);
+            //降级恢复
             rule.cut.set(false);
         }
     }

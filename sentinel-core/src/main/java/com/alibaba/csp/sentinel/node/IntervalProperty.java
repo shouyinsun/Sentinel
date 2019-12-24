@@ -29,6 +29,7 @@ import com.alibaba.csp.sentinel.slots.clusterbuilder.ClusterBuilderSlot;
  * @author Carpenter Lee
  * @author Eric Zhao
  */
+//间隔属性,默认1000ms
 public class IntervalProperty {
 
     /**

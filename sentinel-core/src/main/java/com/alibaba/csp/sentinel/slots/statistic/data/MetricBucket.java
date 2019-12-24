@@ -25,6 +25,8 @@ import com.alibaba.csp.sentinel.slots.statistic.base.LongAdder;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//指标桶
+// LongAdder[] 数组存储 所有的 MetricEvent
 public class MetricBucket {
 
     private final LongAdder[] counters;
@@ -32,6 +34,7 @@ public class MetricBucket {
     private volatile long minRt;
 
     public MetricBucket() {
+        //MetricEvent: PASS、BLOCK、EXCEPTION、SUCCESS、RT、Passed、OCCUPIED_PASS
         MetricEvent[] events = MetricEvent.values();
         this.counters = new LongAdder[events.length];
         for (MetricEvent event : events) {

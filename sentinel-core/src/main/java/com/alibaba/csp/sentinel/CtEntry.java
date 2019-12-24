@@ -41,6 +41,7 @@ class CtEntry extends Entry {
         this.chain = chain;
         this.context = context;
 
+        //设置context的curEntry 或者 child
         setUpEntryFor(context);
     }
 

@@ -29,6 +29,7 @@ import com.alibaba.csp.sentinel.cluster.server.TokenServiceProvider;
  * @author Eric Zhao
  * @since 1.4.0
  */
+//flow 类处理器
 @RequestType(ClusterConstants.MSG_TYPE_FLOW)
 public class FlowRequestProcessor implements RequestProcessor<FlowRequestData, FlowTokenResponseData> {
 

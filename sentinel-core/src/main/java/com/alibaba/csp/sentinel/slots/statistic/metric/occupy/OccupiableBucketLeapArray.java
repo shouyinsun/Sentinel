@@ -26,8 +26,10 @@ import com.alibaba.csp.sentinel.slots.statistic.data.MetricBucket;
  * @author jialiang.linjl
  * @since 1.5.0
  */
+//可占用的 LeapArray
 public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
 
+    //提前占用
     private final FutureBucketLeapArray borrowArray;
 
     public OccupiableBucketLeapArray(int sampleCount, int intervalInMs) {
@@ -41,7 +43,7 @@ public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
         MetricBucket newBucket = new MetricBucket();
 
         MetricBucket borrowBucket = borrowArray.getWindowValue(time);
-        if (borrowBucket != null) {
+        if (borrowBucket != null) {//已被占用
             newBucket.reset(borrowBucket);
         }
 
@@ -53,7 +55,7 @@ public class OccupiableBucketLeapArray extends LeapArray<MetricBucket> {
         // Update the start time and reset value.
         w.resetTo(time);
         MetricBucket borrowBucket = borrowArray.getWindowValue(time);
-        if (borrowBucket != null) {
+        if (borrowBucket != null) {//已提前被占用过
             w.value().reset();
             w.value().addPass((int)borrowBucket.pass());
         } else {

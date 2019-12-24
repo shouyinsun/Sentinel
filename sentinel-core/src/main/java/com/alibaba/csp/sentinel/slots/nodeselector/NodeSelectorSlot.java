@@ -122,11 +122,15 @@ import java.util.Map;
  * @see EntranceNode
  * @see ContextUtil
  */
+
+//相同的资源但是Context不同,分别新建 DefaultNode
 public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
 
     /**
      * {@link DefaultNode}s of the same resource in different context.
      */
+    //默认node map
+    // contextName -> DefaultNode
     private volatile Map<String, DefaultNode> map = new HashMap<String, DefaultNode>(10);
 
     @Override
@@ -155,19 +159,23 @@ public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
             synchronized (this) {
                 node = map.get(context.getName());
                 if (node == null) {
+                    //默认node
                     node = new DefaultNode(resourceWrapper, null);
                     HashMap<String, DefaultNode> cacheMap = new HashMap<String, DefaultNode>(map.size());
                     cacheMap.putAll(map);
                     cacheMap.put(context.getName(), node);
                     map = cacheMap;
                     // Build invocation tree
+                    //构建 调用树
                     ((DefaultNode) context.getLastNode()).addChild(node);
                 }
 
             }
         }
 
+        //set curEntry curNode
         context.setCurNode(node);
+        //唤醒执行下一个插槽,node 为 DefaultNode
         fireEntry(context, resourceWrapper, node, count, prioritized, args);
     }
 

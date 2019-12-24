@@ -26,6 +26,7 @@ import com.alibaba.csp.sentinel.slots.clusterbuilder.ClusterBuilderSlot;
  * @author jialiang.linjl
  * @author CarpenterLee
  */
+//分片属性,默认2
 public class SampleCountProperty {
 
     /**
@@ -36,6 +37,7 @@ public class SampleCountProperty {
      * </p>
      * Node that this value must be divisor of 1000.
      */
+    //样本个数,分片数量
     public static volatile int SAMPLE_COUNT = 2;
 
     public static void register2Property(SentinelProperty<Integer> property) {

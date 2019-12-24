@@ -38,6 +38,7 @@ public final class TokenClientProvider {
     }
 
     private static void resolveTokenClientInstance() {
+        //spi ClusterTokenClient
         ClusterTokenClient resolvedClient = SpiLoader.loadFirstInstance(ClusterTokenClient.class);
         if (resolvedClient == null) {
             RecordLog.info(

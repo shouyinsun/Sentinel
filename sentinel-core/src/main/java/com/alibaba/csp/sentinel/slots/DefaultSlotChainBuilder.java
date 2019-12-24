@@ -33,18 +33,26 @@ import com.alibaba.csp.sentinel.slots.system.SystemSlot;
  * @author qinan.qn
  * @author leyou
  */
+//默认的 slot chain 构造器
 public class DefaultSlotChainBuilder implements SlotChainBuilder {
 
     @Override
     public ProcessorSlotChain build() {
         ProcessorSlotChain chain = new DefaultProcessorSlotChain();
+        //NodeSelectorSlot 收集 资源 的路径,将这些资源的调用路径,以树状结构存储起来
         chain.addLast(new NodeSelectorSlot());
+        //ClusterBuilderSlot 存储 资源 集群的统计信息以及调用者信息
         chain.addLast(new ClusterBuilderSlot());
         chain.addLast(new LogSlot());
+        //StatisticSlot 记录、统计不同维度的 runtime 指标监控信息
         chain.addLast(new StatisticSlot());
+        //AuthoritySlot 黑白名单
         chain.addLast(new AuthoritySlot());
+        //SystemSlot 系统的状态,来控制总的入口流量
         chain.addLast(new SystemSlot());
+        //FlowSlot 根据预设的限流规则以及前面 slot 统计的状态,来进行流量控制
         chain.addLast(new FlowSlot());
+        //DegradeSlot 通过统计信息以及预设的规则,熔断降级
         chain.addLast(new DegradeSlot());
 
         return chain;

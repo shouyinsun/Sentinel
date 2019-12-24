@@ -35,6 +35,7 @@
         </dependency>
 
         <!-- Sentinel adapter and transport -->
+        <!-- adapter 中过滤器实现        -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-apache-dubbo-adapter</artifactId>

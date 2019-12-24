@@ -37,6 +37,8 @@ public class DynamicSentinelProperty<T> implements SentinelProperty<T> {
     @Override
     public void addListener(PropertyListener<T> listener) {
         listeners.add(listener);
+        //addListener
+        //listener.configLoad
         listener.configLoad(value);
     }
 

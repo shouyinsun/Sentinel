@@ -61,16 +61,17 @@ public class TokenServerHandler extends ChannelInboundHandlerAdapter {
     @SuppressWarnings("unchecked")
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         globalConnectionPool.refreshLastReadTime(ctx.channel());
-        if (msg instanceof ClusterRequest) {
+        if (msg instanceof ClusterRequest) {//集群类请求
             ClusterRequest request = (ClusterRequest)msg;
 
             // Client ping with its namespace, add to connection manager.
-            if (request.getType() == ClusterConstants.MSG_TYPE_PING) {
+            if (request.getType() == ClusterConstants.MSG_TYPE_PING) {//ping 请求
                 handlePingRequest(ctx, request);
                 return;
             }
 
             // Pick request processor for request type.
+            // 获取对应msg type 的 processor 处理器
             RequestProcessor<?, ?> processor = RequestProcessorProvider.getProcessor(request.getType());
             if (processor == null) {
                 RecordLog.warn("[TokenServerHandler] No processor for request type: " + request.getType());

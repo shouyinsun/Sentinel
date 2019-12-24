@@ -21,6 +21,8 @@ package com.alibaba.csp.sentinel.slots.block;
  *
  * @author youji.zj
  */
+//block 异常
+//FlowException、ParamFlowException、DegradeException、AuthorityException、SystemBlockException
 public abstract class BlockException extends Exception {
 
     public static final String BLOCK_EXCEPTION_FLAG = "SentinelBlockException";

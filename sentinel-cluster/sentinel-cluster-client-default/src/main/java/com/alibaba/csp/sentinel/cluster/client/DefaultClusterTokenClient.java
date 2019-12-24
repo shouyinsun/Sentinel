@@ -42,9 +42,12 @@ import com.alibaba.csp.sentinel.util.StringUtil;
  * @author Eric Zhao
  * @since 1.4.0
  */
+//默认集群 token获取 client
 public class DefaultClusterTokenClient implements ClusterTokenClient {
 
+    //传输client
     private ClusterTransportClient transportClient;
+    //token server说明
     private TokenServerDescriptor serverDescriptor;
 
     private final AtomicBoolean shouldStart = new AtomicBoolean(false);
@@ -70,6 +73,7 @@ public class DefaultClusterTokenClient implements ClusterTokenClient {
         if (transportClient != null) {
             return;
         }
+        //server host and port
         String host = ClusterClientConfigManager.getServerHost();
         int port = ClusterClientConfigManager.getServerPort();
         if (StringUtil.isBlank(host) || port <= 0) {
@@ -77,6 +81,7 @@ public class DefaultClusterTokenClient implements ClusterTokenClient {
         }
 
         try {
+            //server host and port
             this.transportClient = new NettyTransportClient(host, port);
             this.serverDescriptor = new TokenServerDescriptor(host, port);
             RecordLog.info("[DefaultClusterTokenClient] New client created: " + serverDescriptor);
@@ -147,12 +152,13 @@ public class DefaultClusterTokenClient implements ClusterTokenClient {
     }
 
     @Override
-    public TokenResult requestToken(Long flowId, int acquireCount, boolean prioritized) {
+    public TokenResult requestToken(Long flowId, int acquireCount, boolean prioritized) {//获取token 请求
         if (notValidRequest(flowId, acquireCount)) {
             return badRequest();
         }
         FlowRequestData data = new FlowRequestData().setCount(acquireCount)
             .setFlowId(flowId).setPriority(prioritized);
+        //msgType: flow
         ClusterRequest<FlowRequestData> request = new ClusterRequest<>(ClusterConstants.MSG_TYPE_FLOW, data);
         try {
             TokenResult result = sendTokenRequest(request);

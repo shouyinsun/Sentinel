@@ -136,6 +136,7 @@ import com.alibaba.csp.sentinel.util.function.Function;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//流控,规则校验
 public class FlowSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     private final FlowRuleChecker checker;
@@ -158,8 +159,10 @@ public class FlowSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
     @Override
     public void entry(Context context, ResourceWrapper resourceWrapper, DefaultNode node, int count,
                       boolean prioritized, Object... args) throws Throwable {
+        //流控
         checkFlow(resourceWrapper, context, node, count, prioritized);
 
+        //next
         fireEntry(context, resourceWrapper, node, count, prioritized, args);
     }
 

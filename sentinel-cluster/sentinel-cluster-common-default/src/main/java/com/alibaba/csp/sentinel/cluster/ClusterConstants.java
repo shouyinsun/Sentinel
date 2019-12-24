@@ -21,6 +21,7 @@ package com.alibaba.csp.sentinel.cluster;
  */
 public final class ClusterConstants {
 
+    //集群msg类型
     public static final int MSG_TYPE_PING = 0;
     public static final int MSG_TYPE_FLOW = 1;
     public static final int MSG_TYPE_PARAM_FLOW = 2;

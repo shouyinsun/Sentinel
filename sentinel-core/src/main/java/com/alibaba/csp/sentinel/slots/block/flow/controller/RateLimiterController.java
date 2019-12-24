@@ -25,8 +25,10 @@ import com.alibaba.csp.sentinel.node.Node;
 /**
  * @author jialiang.linjl
  */
+//流控 排队
 public class RateLimiterController implements TrafficShapingController {
 
+    //最大排队时长
     private final int maxQueueingTimeMs;
     private final double count;
 
@@ -56,19 +58,20 @@ public class RateLimiterController implements TrafficShapingController {
 
         long currentTime = TimeUtil.currentTimeMillis();
         // Calculate the interval between every two requests.
+        // acquireCount * 单个请求平均耗时
         long costTime = Math.round(1.0 * (acquireCount) / count * 1000);
 
         // Expected pass time of this request.
         long expectedTime = costTime + latestPassedTime.get();
 
-        if (expectedTime <= currentTime) {
+        if (expectedTime <= currentTime) {//当前时间已经超过期望时间
             // Contention may exist here, but it's okay.
             latestPassedTime.set(currentTime);
             return true;
         } else {
             // Calculate the time to wait.
             long waitTime = costTime + latestPassedTime.get() - TimeUtil.currentTimeMillis();
-            if (waitTime > maxQueueingTimeMs) {
+            if (waitTime > maxQueueingTimeMs) {//wait时间超过最大排队时间,拒绝
                 return false;
             } else {
                 long oldTime = latestPassedTime.addAndGet(costTime);

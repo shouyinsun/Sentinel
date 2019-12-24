@@ -31,6 +31,7 @@ import com.alibaba.csp.sentinel.cluster.server.TokenServiceProvider;
  * @author Eric Zhao
  * @since 1.4.0
  */
+//参数flow 类处理器
 @RequestType(ClusterConstants.MSG_TYPE_PARAM_FLOW)
 public class ParamFlowRequestProcessor implements RequestProcessor<ParamFlowRequestData, FlowTokenResponseData> {
 

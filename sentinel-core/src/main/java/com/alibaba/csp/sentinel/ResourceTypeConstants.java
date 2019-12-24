@@ -19,6 +19,7 @@ package com.alibaba.csp.sentinel;
  * @author Eric Zhao
  * @since 1.7.0
  */
+//resource 类型
 public final class ResourceTypeConstants {
 
     public static final int COMMON = 0;

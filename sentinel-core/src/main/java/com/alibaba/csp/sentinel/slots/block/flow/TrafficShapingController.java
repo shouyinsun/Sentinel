@@ -22,6 +22,7 @@ import com.alibaba.csp.sentinel.node.Node;
  *
  * @author jialiang.linjl
  */
+// traffic shaping  流量整形
 public interface TrafficShapingController {
 
     /**

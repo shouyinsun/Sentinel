@@ -87,7 +87,7 @@ public abstract class ResourceWrapper {
      * Only {@link #getName()} is considered.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) {//equals,资源name相同
         if (obj instanceof ResourceWrapper) {
             ResourceWrapper rw = (ResourceWrapper)obj;
             return rw.getName().equals(getName());

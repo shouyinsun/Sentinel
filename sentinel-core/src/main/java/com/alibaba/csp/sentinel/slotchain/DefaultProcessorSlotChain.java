@@ -50,7 +50,9 @@ public class DefaultProcessorSlotChain extends ProcessorSlotChain {
 
     @Override
     public void addLast(AbstractLinkedProcessorSlot<?> protocolProcessor) {
+        //set next
         end.setNext(protocolProcessor);
+        //set end
         end = protocolProcessor;
     }
 

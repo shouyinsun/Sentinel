@@ -85,6 +85,7 @@ public class SphU {
      * @throws BlockException if the block criteria is met, eg. when any rule's threshold is exceeded.
      */
     public static Entry entry(String name) throws BlockException {
+        //默认 out EntryType
         return Env.sph.entry(name, EntryType.OUT, 1, OBJECTS0);
     }
 

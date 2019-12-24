@@ -38,18 +38,18 @@ public final class InitExecutor {
      *
      * The initialization will be executed only once.
      */
-    public static void doInit() {
+    public static void doInit() {//spi InitFunc
         if (!initialized.compareAndSet(false, true)) {
             return;
         }
         try {
             ServiceLoader<InitFunc> loader = ServiceLoaderUtil.getServiceLoader(InitFunc.class);
             List<OrderWrapper> initList = new ArrayList<OrderWrapper>();
-            for (InitFunc initFunc : loader) {
+            for (InitFunc initFunc : loader) {//order
                 RecordLog.info("[InitExecutor] Found init func: " + initFunc.getClass().getCanonicalName());
                 insertSorted(initList, initFunc);
             }
-            for (OrderWrapper w : initList) {
+            for (OrderWrapper w : initList) {//init
                 w.func.init();
                 RecordLog.info(String.format("[InitExecutor] Executing %s with order %d",
                     w.func.getClass().getCanonicalName(), w.order));

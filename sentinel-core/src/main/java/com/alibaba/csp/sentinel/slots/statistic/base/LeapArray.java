@@ -38,12 +38,18 @@ import com.alibaba.csp.sentinel.util.TimeUtil;
  * @author Eric Zhao
  * @author Carpenter Lee
  */
+
+//滑动时间窗口
+//sampleCount = intervalInMs / windowLengthInMs
 public abstract class LeapArray<T> {
 
     protected int windowLengthInMs;
     protected int sampleCount;
     protected int intervalInMs;
 
+
+    //分片数组
+    //原子引用数组
     protected final AtomicReferenceArray<WindowWrap<T>> array;
 
     /**
@@ -74,6 +80,7 @@ public abstract class LeapArray<T> {
      *
      * @return the bucket at current timestamp
      */
+    //当前时间的时间分片
     public WindowWrap<T> currentWindow() {
         return currentWindow(TimeUtil.currentTimeMillis());
     }
@@ -111,7 +118,7 @@ public abstract class LeapArray<T> {
      * @param timeMillis a valid timestamp in milliseconds
      * @return current bucket item at provided timestamp if the time is valid; null if time is invalid
      */
-    public WindowWrap<T> currentWindow(long timeMillis) {
+    public WindowWrap<T> currentWindow(long timeMillis) {//当前时间戳所在的滑动窗口
         if (timeMillis < 0) {
             return null;
         }
@@ -143,6 +150,7 @@ public abstract class LeapArray<T> {
                  * succeed to update, while other threads yield its time slice.
                  */
                 WindowWrap<T> window = new WindowWrap<T>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
+                //原子引用数组 cas
                 if (array.compareAndSet(idx, null, window)) {
                     // Successfully updated, return the created bucket.
                     return window;
@@ -163,7 +171,7 @@ public abstract class LeapArray<T> {
                  * that means the time is within the bucket, so directly return the bucket.
                  */
                 return old;
-            } else if (windowStart > old.windowStart()) {
+            } else if (windowStart > old.windowStart()) {//old分片已过期
                 /*
                  *   (old)
                  *             B0       B1      B2    NULL      B4

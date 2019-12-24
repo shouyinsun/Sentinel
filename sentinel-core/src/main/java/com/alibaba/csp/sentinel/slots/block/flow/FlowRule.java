@@ -65,24 +65,31 @@ public class FlowRule extends AbstractRule {
      * {@link RuleConstant#STRATEGY_RELATE} for relevant flow control (with relevant resource);
      * {@link RuleConstant#STRATEGY_CHAIN} for chain flow control (by entrance resource).
      */
+    //策略 直接、关联、链式
     private int strategy = RuleConstant.STRATEGY_DIRECT;
 
     /**
      * Reference resource in flow control with relevant resource or context.
      */
+    //关联资源
+    // 策略是关联就是关联资源
+    // 策略是链路是context 上下文
     private String refResource;
 
     /**
      * Rate limiter control behavior.
      * 0. default(reject directly), 1. warm up, 2. rate limiter, 3. warm up + rate limiter
      */
+    //流控行为 0默认(直接拒绝) 1预热启动  2限流排队  3预热+排队
     private int controlBehavior = RuleConstant.CONTROL_BEHAVIOR_DEFAULT;
 
+    //流控行为为预热启动时的预热时长（秒）
     private int warmUpPeriodSec = 10;
 
     /**
      * Max queueing time in rate limiter behavior.
      */
+    //流控行为为 限流排队 的最大排队时长 ms
     private int maxQueueingTimeMs = 500;
 
     private boolean clusterMode;
@@ -94,6 +101,7 @@ public class FlowRule extends AbstractRule {
     /**
      * The traffic shaping (throttling) controller.
      */
+    //流量整形 控制器
     private TrafficShapingController controller;
 
     public int getControlBehavior() {

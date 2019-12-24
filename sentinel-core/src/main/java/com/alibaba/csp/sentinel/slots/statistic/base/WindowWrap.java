@@ -22,16 +22,19 @@ package com.alibaba.csp.sentinel.slots.statistic.base;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//时间分片
 public class WindowWrap<T> {
 
     /**
      * Time length of a single window bucket in milliseconds.
      */
+    //时间分片长度 ms
     private final long windowLengthInMs;
 
     /**
      * Start timestamp of the window in milliseconds.
      */
+    //时间分片起始时间
     private long windowStart;
 
     /**

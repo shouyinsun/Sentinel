@@ -63,15 +63,21 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
  * @author jialiang.linjl
  * @author leyou
  */
+//系统规则
 public final class SystemRuleManager {
 
+    //系统负载阈值
     private static volatile double highestSystemLoad = Double.MAX_VALUE;
     /**
      * cpu usage, between [0, 1]
      */
+    //cpu使用阈值
     private static volatile double highestCpuUsage = Double.MAX_VALUE;
+    //qps
     private static volatile double qps = Double.MAX_VALUE;
+    //最大rt
     private static volatile long maxRt = Long.MAX_VALUE;
+    //最大线程数
     private static volatile long maxThread = Long.MAX_VALUE;
     /**
      * mark whether the threshold are set by user.
@@ -95,6 +101,7 @@ public final class SystemRuleManager {
     static {
         checkSystemStatus.set(false);
         statusListener = new SystemStatusListener();
+        //1s查看一次系统负载跟cpu使用
         scheduler.scheduleAtFixedRate(statusListener, 0, 1, TimeUnit.SECONDS);
         currentProperty.addListener(listener);
     }
@@ -287,17 +294,18 @@ public final class SystemRuleManager {
      * @param resourceWrapper the resource.
      * @throws BlockException when any system rule's threshold is exceeded.
      */
+    //check 系统 全局的指标和负载、cpu
     public static void checkSystem(ResourceWrapper resourceWrapper) throws BlockException {
         if (resourceWrapper == null) {
             return;
         }
         // Ensure the checking switch is on.
-        if (!checkSystemStatus.get()) {
+        if (!checkSystemStatus.get()) {//check 开关
             return;
         }
 
         // for inbound traffic only
-        if (resourceWrapper.getEntryType() != EntryType.IN) {
+        if (resourceWrapper.getEntryType() != EntryType.IN) {//只针对入站
             return;
         }
 
@@ -319,8 +327,13 @@ public final class SystemRuleManager {
         }
 
         // load. BBR algorithm.
+        // 负载
+
+        //load1 超过设定的启发值且系统当前的并发线程数超过估算的系统容量时才会触发系统保护（BBR 阶段）
+        // 系统容量由系统的 maxQps * minRt 估算得出
+        // 设定参考值一般是 CPU cores * 2.5
         if (highestSystemLoadIsSet && getCurrentSystemAvgLoad() > highestSystemLoad) {
-            if (!checkBbr(currentThread)) {
+            if (!checkBbr(currentThread)) {//bbr 算法
                 throw new SystemBlockException(resourceWrapper.getName(), "load");
             }
         }

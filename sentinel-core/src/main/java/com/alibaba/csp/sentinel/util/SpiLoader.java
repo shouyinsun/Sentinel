@@ -80,7 +80,7 @@ public final class SpiLoader {
                 SERVICE_LOADER_MAP.put(key, serviceLoader);
             }
 
-            for (T instance : serviceLoader) {
+            for (T instance : serviceLoader) {//第一个非默认实现
                 if (instance.getClass() != defaultClass) {
                     return instance;
                 }

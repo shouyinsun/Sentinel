@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Doug Lea
  * @since 1.8
  */
+//long 加法器
+//分段针对高并发的修改
 public class LongAdder extends Striped64 implements Serializable {
     private static final long serialVersionUID = 7249069246863182397L;
 
@@ -98,6 +100,7 @@ public class LongAdder extends Striped64 implements Serializable {
      *
      * @return the sum
      */
+    //不是绝对准确
     public long sum() {
         long sum = base;
         Cell[] as = cells;

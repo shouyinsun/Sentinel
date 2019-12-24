@@ -48,6 +48,7 @@ public class CtSph implements Sph {
      * Same resource({@link ResourceWrapper#equals(Object)}) will share the same
      * {@link ProcessorSlotChain}, no matter in which {@link Context}.
      */
+    //ResourceWrapper -> ProcessorSlotChain
     private static volatile Map<ResourceWrapper, ProcessorSlotChain> chainMap
         = new HashMap<ResourceWrapper, ProcessorSlotChain>();
 
@@ -133,18 +134,22 @@ public class CtSph implements Sph {
             return new CtEntry(resourceWrapper, null, context);
         }
 
+
+        //生成插槽链
         ProcessorSlot<Object> chain = lookProcessChain(resourceWrapper);
 
         /*
          * Means amount of resources (slot chain) exceeds {@link Constants.MAX_SLOT_CHAIN_SIZE},
          * so no rule checking will be done.
          */
-        if (chain == null) {
+        if (chain == null) {//表示资源(插槽链)超过6000,不会进行规则检查
             return new CtEntry(resourceWrapper, null, context);
         }
 
+        // 生成 Entry 对象
         Entry e = new CtEntry(resourceWrapper, chain, context);
         try {
+            // 开始执行插槽链 调用逻辑
             chain.entry(context, resourceWrapper, null, count, prioritized, args);
         } catch (BlockException e1) {
             e.exit(count, args);
@@ -202,6 +207,7 @@ public class CtSph implements Sph {
                         return null;
                     }
 
+                    //spi 构造 slot chain
                     chain = SlotChainProvider.newSlotChain();
                     Map<ResourceWrapper, ProcessorSlotChain> newMap = new HashMap<ResourceWrapper, ProcessorSlotChain>(
                         chainMap.size() + 1);
@@ -311,6 +317,7 @@ public class CtSph implements Sph {
 
     @Override
     public Entry entry(String name, EntryType type, int count, Object... args) throws BlockException {
+        //资源对象
         StringResourceWrapper resource = new StringResourceWrapper(name, type);
         return entry(resource, count, args);
     }

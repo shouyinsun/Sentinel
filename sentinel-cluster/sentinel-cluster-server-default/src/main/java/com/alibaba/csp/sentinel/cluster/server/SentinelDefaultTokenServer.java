@@ -67,6 +67,7 @@ public class SentinelDefaultTokenServer implements ClusterTokenServer {
         }
         int port = ClusterServerConfigManager.getPort();
         if (port > 0) {
+            //server 为NettyTransportServer
             this.server = new NettyTransportServer(port);
             this.port = port;
         }

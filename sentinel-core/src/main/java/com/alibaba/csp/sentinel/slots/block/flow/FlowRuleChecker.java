@@ -68,10 +68,11 @@ public class FlowRuleChecker {
             return true;
         }
 
-        if (rule.isClusterMode()) {
+        if (rule.isClusterMode()) {//集群
             return passClusterCheck(rule, context, node, acquireCount, prioritized);
         }
 
+        //本机
         return passLocalCheck(rule, context, node, acquireCount, prioritized);
     }
 
@@ -85,7 +86,8 @@ public class FlowRuleChecker {
         return rule.getRater().canPass(selectedNode, acquireCount, prioritized);
     }
 
-    static Node selectReferenceNode(FlowRule rule, Context context, DefaultNode node) {
+    static Node selectReferenceNode(FlowRule rule, Context context, DefaultNode node) {//相关node
+        // 关联资源名称（如果策略是关联 则是关联的资源名称,如果策略是链路 则是上下文名称）
         String refResource = rule.getRefResource();
         int strategy = rule.getStrategy();
 
@@ -93,11 +95,13 @@ public class FlowRuleChecker {
             return null;
         }
 
-        if (strategy == RuleConstant.STRATEGY_RELATE) {
+        if (strategy == RuleConstant.STRATEGY_RELATE) {//关联策略
+            //关联的资源ClusterNode
             return ClusterBuilderSlot.getClusterNode(refResource);
         }
 
-        if (strategy == RuleConstant.STRATEGY_CHAIN) {
+        if (strategy == RuleConstant.STRATEGY_CHAIN) {//链路策略
+            //当前上下文名称不是规则配置的name直接返回null
             if (!refResource.equals(context.getName())) {
                 return null;
             }
@@ -112,32 +116,37 @@ public class FlowRuleChecker {
         return !RuleConstant.LIMIT_APP_DEFAULT.equals(origin) && !RuleConstant.LIMIT_APP_OTHER.equals(origin);
     }
 
+    //根据请求和策略获取流控node
     static Node selectNodeByRequesterAndStrategy(/*@NonNull*/ FlowRule rule, Context context, DefaultNode node) {
         // The limit app should not be empty.
         String limitApp = rule.getLimitApp();
+        //规则的限流策略
         int strategy = rule.getStrategy();
+        //上下文中的 origin
         String origin = context.getOrigin();
 
-        if (limitApp.equals(origin) && filterOrigin(origin)) {
-            if (strategy == RuleConstant.STRATEGY_DIRECT) {
+        if (limitApp.equals(origin) && filterOrigin(origin)) {//规则的limitApp匹配并且不为default 和 other
+            if (strategy == RuleConstant.STRATEGY_DIRECT) {//直接关联策略
                 // Matches limit origin, return origin statistic node.
-                return context.getOriginNode();
+                return context.getOriginNode();//当前来源origin节点
             }
 
+            //non direct
             return selectReferenceNode(rule, context, node);
-        } else if (RuleConstant.LIMIT_APP_DEFAULT.equals(limitApp)) {
+        } else if (RuleConstant.LIMIT_APP_DEFAULT.equals(limitApp)) {//default origin
             if (strategy == RuleConstant.STRATEGY_DIRECT) {
                 // Return the cluster node.
                 return node.getClusterNode();
             }
-
+            //non direct
             return selectReferenceNode(rule, context, node);
-        } else if (RuleConstant.LIMIT_APP_OTHER.equals(limitApp)
+        } else if (RuleConstant.LIMIT_APP_OTHER.equals(limitApp)//other origin
             && FlowRuleManager.isOtherOrigin(origin, rule.getResource())) {
             if (strategy == RuleConstant.STRATEGY_DIRECT) {
                 return context.getOriginNode();
             }
 
+            //non direct
             return selectReferenceNode(rule, context, node);
         }
 
@@ -148,10 +157,11 @@ public class FlowRuleChecker {
                                             boolean prioritized) {
         try {
             TokenService clusterService = pickClusterService();
-            if (clusterService == null) {
+            if (clusterService == null) {//降级到本机处理
                 return fallbackToLocalOrPass(rule, context, node, acquireCount, prioritized);
             }
             long flowId = rule.getClusterConfig().getFlowId();
+            //flow 请求
             TokenResult result = clusterService.requestToken(flowId, acquireCount, prioritized);
             return applyTokenResult(result, rule, context, node, acquireCount, prioritized);
             // If client is absent, then fallback to local mode.
@@ -174,10 +184,10 @@ public class FlowRuleChecker {
     }
 
     private static TokenService pickClusterService() {
-        if (ClusterStateManager.isClient()) {
+        if (ClusterStateManager.isClient()) {//client
             return TokenClientProvider.getClient();
         }
-        if (ClusterStateManager.isServer()) {
+        if (ClusterStateManager.isServer()) {//server
             return EmbeddedClusterTokenServerProvider.getServer();
         }
         return null;

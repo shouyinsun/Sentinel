@@ -44,8 +44,10 @@ import com.alibaba.csp.sentinel.property.SentinelProperty;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//规则管理
 public class FlowRuleManager {
 
+    //规则map resource -> list<FlowRule>
     private static final Map<String, List<FlowRule>> flowRules = new ConcurrentHashMap<String, List<FlowRule>>();
 
     private static final FlowPropertyListener LISTENER = new FlowPropertyListener();
@@ -57,6 +59,7 @@ public class FlowRuleManager {
 
     static {
         currentProperty.addListener(LISTENER);
+        //一秒 指标聚合一次
         SCHEDULER.scheduleAtFixedRate(new MetricTimerListener(), 0, 1, TimeUnit.SECONDS);
     }
 
@@ -128,6 +131,7 @@ public class FlowRuleManager {
 
         @Override
         public void configUpdate(List<FlowRule> value) {
+            //构建flowRuleMap
             Map<String, List<FlowRule>> rules = FlowRuleUtil.buildFlowRuleMap(value);
             if (rules != null) {
                 flowRules.clear();

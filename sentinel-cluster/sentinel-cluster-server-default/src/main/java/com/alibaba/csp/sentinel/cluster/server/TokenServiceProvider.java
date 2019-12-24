@@ -37,6 +37,7 @@ public final class TokenServiceProvider {
     }
 
     private static void resolveTokenServiceSpi() {
+        //spi tokenService
         service = SpiLoader.loadFirstInstanceOrDefault(TokenService.class, DefaultTokenService.class);
         if (service != null) {
             RecordLog.info("[TokenServiceProvider] Global token service resolved: "

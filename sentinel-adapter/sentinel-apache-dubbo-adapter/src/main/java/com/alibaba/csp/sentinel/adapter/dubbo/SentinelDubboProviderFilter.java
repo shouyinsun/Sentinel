@@ -44,6 +44,7 @@ import org.apache.dubbo.rpc.RpcException;
  * @author Carpenter Lee
  * @author Eric Zhao
  */
+//spi 过滤器 实现流控
 @Activate(group = "provider")
 public class SentinelDubboProviderFilter implements Filter {
 

@@ -87,12 +87,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author qinan.qn
  * @author jialiang.linjl
  */
+
+//统计node
 public class StatisticNode implements Node {
 
     /**
      * Holds statistics of the recent {@code INTERVAL} seconds. The {@code INTERVAL} is divided into time spans
      * by given {@code sampleCount}.
      */
+    //秒级滚动计数器 默认1s 两个分片
     private transient volatile Metric rollingCounterInSecond = new ArrayMetric(SampleCountProperty.SAMPLE_COUNT,
         IntervalProperty.INTERVAL);
 
@@ -100,11 +103,13 @@ public class StatisticNode implements Node {
      * Holds statistics of the recent 60 seconds. The windowLengthInMs is deliberately set to 1000 milliseconds,
      * meaning each bucket per second, in this way we can get accurate statistics of each second.
      */
+    //分钟级滚动计数器 默认60s 60个分片
     private transient Metric rollingCounterInMinute = new ArrayMetric(60, 60 * 1000, false);
 
     /**
      * The counter for thread count.
      */
+    //线程计数
     private LongAdder curThreadNum = new LongAdder();
 
     /**
@@ -147,7 +152,7 @@ public class StatisticNode implements Node {
     }
 
     @Override
-    public void reset() {
+    public void reset() {//重置
         rollingCounterInSecond = new ArrayMetric(SampleCountProperty.SAMPLE_COUNT, IntervalProperty.INTERVAL);
     }
 
@@ -172,7 +177,7 @@ public class StatisticNode implements Node {
     }
 
     @Override
-    public double previousPassQps() {
+    public double previousPassQps() {//用分钟级别里的bucket
         return this.rollingCounterInMinute.previousWindowPass();
     }
 
@@ -286,12 +291,14 @@ public class StatisticNode implements Node {
     @Override
     public long tryOccupyNext(long currentTime, int acquireCount, double threshold) {
         double maxCount = threshold * IntervalProperty.INTERVAL / 1000;
+        //当前已经提前占用的
         long currentBorrow = rollingCounterInSecond.waiting();
         if (currentBorrow >= maxCount) {
             return OccupyTimeoutProperty.getOccupyTimeout();
         }
 
         int windowLength = IntervalProperty.INTERVAL / SampleCountProperty.SAMPLE_COUNT;
+        //最早的时间
         long earliestTime = currentTime - currentTime % windowLength + windowLength - IntervalProperty.INTERVAL;
 
         int idx = 0;
@@ -300,16 +307,20 @@ public class StatisticNode implements Node {
          * since call rollingCounterInSecond.pass(). So in high concurrency, the following code may
          * lead more tokens be borrowed.
          */
+        //当前间隔时间窗口已经pass的
         long currentPass = rollingCounterInSecond.pass();
-        while (earliestTime < currentTime) {
+        while (earliestTime < currentTime) {//向后找满足
+            // currentPass + currentBorrow + acquireCount - windowPass <= maxCount 的滑动窗口
             long waitInMs = idx * windowLength + windowLength - currentTime % windowLength;
             if (waitInMs >= OccupyTimeoutProperty.getOccupyTimeout()) {
                 break;
             }
             long windowPass = rollingCounterInSecond.getWindowPass(earliestTime);
             if (currentPass + currentBorrow + acquireCount - windowPass <= maxCount) {
+                //向后间隔时间
                 return waitInMs;
             }
+            //下一个刻度
             earliestTime += windowLength;
             currentPass -= windowPass;
             idx++;

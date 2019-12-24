@@ -24,17 +24,21 @@ import com.alibaba.csp.sentinel.slots.block.RuleConstant;
  * @author Eric Zhao
  * @since 1.4.0
  */
+//集群限流配置
 public class ClusterFlowConfig {
 
     /**
      * Global unique ID.
      */
+    //全局唯一的 flowId
     private Long flowId;
 
     /**
      * Threshold type (average by local value or global value).
      */
+    //阈值类型
     private int thresholdType = ClusterRuleConstant.FLOW_THRESHOLD_AVG_LOCAL;
+    //在 client 连接失败或通信失败时,是否退化到本地的限流模式
     private boolean fallbackToLocalWhenFail = true;
 
     /**
@@ -42,10 +46,12 @@ public class ClusterFlowConfig {
      */
     private int strategy = ClusterRuleConstant.FLOW_CLUSTER_STRATEGY_NORMAL;
 
+    //样本个数
     private int sampleCount = ClusterRuleConstant.DEFAULT_CLUSTER_SAMPLE_COUNT;
     /**
      * The time interval length of the statistic sliding window (in milliseconds)
      */
+    //滑动窗口长度
     private int windowIntervalMs = RuleConstant.DEFAULT_WINDOW_INTERVAL_MS;
 
     public Long getFlowId() {

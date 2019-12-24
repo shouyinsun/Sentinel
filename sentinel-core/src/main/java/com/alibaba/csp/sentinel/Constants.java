@@ -33,10 +33,14 @@ public final class Constants {
 
     public static final String SENTINEL_VERSION = VersionUtil.getVersion("1.7.1");
 
+    //contextNameNodeMap max size
     public final static int MAX_CONTEXT_NAME_SIZE = 2000;
+    //slot链 最大size
     public final static int MAX_SLOT_CHAIN_SIZE = 6000;
 
+    //root id  machine-root
     public final static String ROOT_ID = "machine-root";
+    //默认context上下文名称
     public final static String CONTEXT_DEFAULT_NAME = "sentinel_default_context";
 
     /**
@@ -57,6 +61,8 @@ public final class Constants {
     /**
      * Global ROOT statistic node that represents the universal parent node.
      */
+
+    //root Node
     public final static DefaultNode ROOT = new EntranceNode(new StringResourceWrapper(ROOT_ID, EntryType.IN),
         new ClusterNode(ROOT_ID, ResourceTypeConstants.COMMON));
 

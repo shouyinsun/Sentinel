@@ -54,6 +54,7 @@ public final class SentinelConfig {
     static final String DEFAULT_CHARSET = "UTF-8";
     static final long DEFAULT_SINGLE_METRIC_FILE_SIZE = 1024 * 1024 * 50;
     static final int DEFAULT_TOTAL_METRIC_FILE_COUNT = 6;
+    //冷启动系数 默认3
     static final int DEFAULT_COLD_FACTOR = 3;
 
     public static final int DEFAULT_STATISTIC_MAX_RT = 4900;

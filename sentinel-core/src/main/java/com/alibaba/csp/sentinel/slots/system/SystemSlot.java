@@ -27,6 +27,7 @@ import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
  * @author jialiang.linjl
  * @author leyou
  */
+//系统规则检查
 public class SystemSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     @Override

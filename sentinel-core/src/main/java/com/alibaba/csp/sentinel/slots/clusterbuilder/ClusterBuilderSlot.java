@@ -44,6 +44,7 @@ import com.alibaba.csp.sentinel.slotchain.StringResourceWrapper;
  *
  * @author jialiang.linjl
  */
+//相同资源共享同一个 clusterNode
 public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     /**
@@ -64,6 +65,8 @@ public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode>
      * at the very beginning while concurrent map will hold the lock all the time.
      * </p>
      */
+
+    // ResourceWrapper -> ClusterNode
     private static volatile Map<ResourceWrapper, ClusterNode> clusterNodeMap = new HashMap<>();
 
     private static final Object lock = new Object();
@@ -78,26 +81,31 @@ public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode>
             synchronized (lock) {
                 if (clusterNode == null) {
                     // Create the cluster node.
+                    //创建一个 clusterNode
+                    // name 为 resourceName
                     clusterNode = new ClusterNode(resourceWrapper.getName(), resourceWrapper.getResourceType());
                     HashMap<ResourceWrapper, ClusterNode> newMap = new HashMap<>(Math.max(clusterNodeMap.size(), 16));
                     newMap.putAll(clusterNodeMap);
                     newMap.put(node.getId(), clusterNode);
-
+                    // ResourceWrapper -> ClusterNode 映射
                     clusterNodeMap = newMap;
                 }
             }
         }
+        //设置 clusterNode
         node.setClusterNode(clusterNode);
 
         /*
          * if context origin is set, we should get or create a new {@link Node} of
          * the specific origin.
          */
-        if (!"".equals(context.getOrigin())) {
+        if (!"".equals(context.getOrigin())) { //如果有来源则新建一个来源Node
             Node originNode = node.getClusterNode().getOrCreateOriginNode(context.getOrigin());
+            //context curEntry 设置 origin node
             context.getCurEntry().setOriginNode(originNode);
         }
 
+        //fire next
         fireEntry(context, resourceWrapper, node, count, prioritized, args);
     }
 

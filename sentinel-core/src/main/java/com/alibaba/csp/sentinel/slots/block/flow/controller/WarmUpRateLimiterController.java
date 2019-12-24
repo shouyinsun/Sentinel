@@ -24,6 +24,7 @@ import com.alibaba.csp.sentinel.util.TimeUtil;
  * @author jialiang.linjl
  * @since 1.4.0
  */
+//预热+排队
 public class WarmUpRateLimiterController extends WarmUpController {
 
     private final int timeoutInMs;
@@ -41,6 +42,7 @@ public class WarmUpRateLimiterController extends WarmUpController {
 
     @Override
     public boolean canPass(Node node, int acquireCount, boolean prioritized) {
+        //前一秒qps
         long previousQps = (long) node.previousPassQps();
         syncToken(previousQps);
 
@@ -49,7 +51,7 @@ public class WarmUpRateLimiterController extends WarmUpController {
         long restToken = storedTokens.get();
         long costTime = 0;
         long expectedTime = 0;
-        if (restToken >= warningToken) {
+        if (restToken >= warningToken) {//超过警戒线
             long aboveToken = restToken - warningToken;
 
             // current interval = restToken*slope+1/count

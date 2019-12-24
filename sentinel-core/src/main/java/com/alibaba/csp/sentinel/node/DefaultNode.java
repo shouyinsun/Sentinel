@@ -38,21 +38,25 @@ import com.alibaba.csp.sentinel.slots.nodeselector.NodeSelectorSlot;
  * @author qinan.qn
  * @see NodeSelectorSlot
  */
+//默认node
 public class DefaultNode extends StatisticNode {
 
     /**
      * The resource associated with the node.
      */
+    //资源 id
     private ResourceWrapper id;
 
     /**
      * The list of all child nodes.
      */
+    //child list node
     private volatile Set<Node> childList = new HashSet<>();
 
     /**
      * Associated cluster node.
      */
+    //集群 node
     private ClusterNode clusterNode;
 
     public DefaultNode(ResourceWrapper id, ClusterNode clusterNode) {

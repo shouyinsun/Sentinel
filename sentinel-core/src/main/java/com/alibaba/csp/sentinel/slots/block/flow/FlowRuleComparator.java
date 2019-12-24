@@ -29,7 +29,7 @@ public class FlowRuleComparator implements Comparator<FlowRule> {
     @Override
     public int compare(FlowRule o1, FlowRule o2) {
         // Clustered mode will be on the top.
-        if (o1.isClusterMode() && !o2.isClusterMode()) {
+        if (o1.isClusterMode() && !o2.isClusterMode()) {//集群模式 靠前
             return 1;
         }
 
@@ -45,7 +45,7 @@ public class FlowRuleComparator implements Comparator<FlowRule> {
             return 0;
         }
 
-        if (RuleConstant.LIMIT_APP_DEFAULT.equals(o1.getLimitApp())) {
+        if (RuleConstant.LIMIT_APP_DEFAULT.equals(o1.getLimitApp())) {//default origin 靠前
             return 1;
         } else if (RuleConstant.LIMIT_APP_DEFAULT.equals(o2.getLimitApp())) {
             return -1;

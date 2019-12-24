@@ -42,6 +42,7 @@ import org.apache.dubbo.rpc.RpcException;
  * @author Carpenter Lee
  * @author Eric Zhao
  */
+//spi 过滤器
 @Activate(group = "consumer")
 public class SentinelDubboConsumerFilter implements Filter {
 

@@ -33,14 +33,17 @@ import com.alibaba.csp.sentinel.util.function.Predicate;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//基于LeapArray的metric
 public class ArrayMetric implements Metric {
 
     private final LeapArray<MetricBucket> data;
 
+    //默认是 OccupiableBucketLeapArray
     public ArrayMetric(int sampleCount, int intervalInMs) {
         this.data = new OccupiableBucketLeapArray(sampleCount, intervalInMs);
     }
 
+    //enableOccupy 提前占用
     public ArrayMetric(int sampleCount, int intervalInMs, boolean enableOccupy) {
         if (enableOccupy) {
             this.data = new OccupiableBucketLeapArray(sampleCount, intervalInMs);

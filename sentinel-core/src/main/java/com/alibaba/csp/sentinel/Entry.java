@@ -53,10 +53,12 @@ public abstract class Entry implements AutoCloseable {
     private static final Object[] OBJECTS0 = new Object[0];
 
     private long createTime;
+    //当前node
     private Node curNode;
     /**
      * {@link Node} of the specific origin, Usually the origin is the Service Consumer.
      */
+    //origin node
     private Node originNode;
     private Throwable error;
     protected ResourceWrapper resourceWrapper;

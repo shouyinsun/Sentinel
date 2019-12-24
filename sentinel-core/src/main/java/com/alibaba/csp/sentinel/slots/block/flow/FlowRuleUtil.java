@@ -106,6 +106,7 @@ public final class FlowRuleUtil {
                 rule.setLimitApp(RuleConstant.LIMIT_APP_DEFAULT);
             }
 
+            //生成rater TrafficShapingController
             TrafficShapingController rater = generateRater(rule);
             rule.setRater(rater);
 
@@ -123,6 +124,7 @@ public final class FlowRuleUtil {
 
             flowRules.add(rule);
         }
+        //rule sort
         Comparator<FlowRule> comparator = new FlowRuleComparator();
         for (Entry<K, Set<FlowRule>> entries : tmpMap.entrySet()) {
             List<FlowRule> rules = new ArrayList<>(entries.getValue());
@@ -137,14 +139,14 @@ public final class FlowRuleUtil {
     }
 
     private static TrafficShapingController generateRater(/*@Valid*/ FlowRule rule) {
-        if (rule.getGrade() == RuleConstant.FLOW_GRADE_QPS) {
+        if (rule.getGrade() == RuleConstant.FLOW_GRADE_QPS) {//qps grade
             switch (rule.getControlBehavior()) {
-                case RuleConstant.CONTROL_BEHAVIOR_WARM_UP:
+                case RuleConstant.CONTROL_BEHAVIOR_WARM_UP://预热
                     return new WarmUpController(rule.getCount(), rule.getWarmUpPeriodSec(),
                         ColdFactorProperty.coldFactor);
-                case RuleConstant.CONTROL_BEHAVIOR_RATE_LIMITER:
+                case RuleConstant.CONTROL_BEHAVIOR_RATE_LIMITER://排队
                     return new RateLimiterController(rule.getMaxQueueingTimeMs(), rule.getCount());
-                case RuleConstant.CONTROL_BEHAVIOR_WARM_UP_RATE_LIMITER:
+                case RuleConstant.CONTROL_BEHAVIOR_WARM_UP_RATE_LIMITER://预热排队
                     return new WarmUpRateLimiterController(rule.getCount(), rule.getWarmUpPeriodSec(),
                         rule.getMaxQueueingTimeMs(), ColdFactorProperty.coldFactor);
                 case RuleConstant.CONTROL_BEHAVIOR_DEFAULT:
@@ -152,6 +154,7 @@ public final class FlowRuleUtil {
                     // Default mode or unknown mode: default traffic shaping controller (fast-reject).
             }
         }
+        //默认
         return new DefaultController(rule.getCount(), rule.getGrade());
     }
 

@@ -20,6 +20,9 @@ package com.alibaba.csp.sentinel;
  *
  * @author jialiang.linjl
  */
+//entry 类型
+// in 入站
+// out 出站
 public enum EntryType {
     /**
      * Inbound traffic

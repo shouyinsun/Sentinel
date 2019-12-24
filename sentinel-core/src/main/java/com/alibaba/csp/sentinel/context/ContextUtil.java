@@ -47,6 +47,7 @@ public class ContextUtil {
     /**
      * Store the context in ThreadLocal for easy access.
      */
+    //threadLocal 存放context
     private static ThreadLocal<Context> contextHolder = new ThreadLocal<>();
 
     /**
@@ -62,9 +63,11 @@ public class ContextUtil {
         initDefaultContext();
     }
 
-    private static void initDefaultContext() {
+    private static void initDefaultContext() {//默认context
         String defaultContextName = Constants.CONTEXT_DEFAULT_NAME;
+        //entrance node
         EntranceNode node = new EntranceNode(new StringResourceWrapper(defaultContextName, EntryType.IN), null);
+        //root node
         Constants.ROOT.addChild(node);
         contextNameNodeMap.put(defaultContextName, node);
     }
@@ -119,7 +122,7 @@ public class ContextUtil {
 
     protected static Context trueEnter(String name, String origin) {
         Context context = contextHolder.get();
-        if (context == null) {
+        if (context == null) {//没有context,new 一个
             Map<String, DefaultNode> localCacheNameMap = contextNameNodeMap;
             DefaultNode node = localCacheNameMap.get(name);
             if (node == null) {
@@ -135,8 +138,9 @@ public class ContextUtil {
                                 setNullContext();
                                 return NULL_CONTEXT;
                             } else {
+                                //没有,添加一个entrance node
                                 node = new EntranceNode(new StringResourceWrapper(name, EntryType.IN), null);
-                                // Add entrance node.
+                                // 加入至全局根节点下
                                 Constants.ROOT.addChild(node);
 
                                 Map<String, DefaultNode> newMap = new HashMap<>(contextNameNodeMap.size() + 1);
@@ -150,6 +154,7 @@ public class ContextUtil {
                     }
                 }
             }
+            //entrance node
             context = new Context(node, name);
             context.setOrigin(origin);
             contextHolder.set(context);
@@ -200,6 +205,7 @@ public class ContextUtil {
     public static void exit() {
         Context context = contextHolder.get();
         if (context != null && context.getCurEntry() == null) {
+            //contextHolder set null
             contextHolder.set(null);
         }
     }
@@ -270,11 +276,13 @@ public class ContextUtil {
      * @param f       lambda to run within the context
      * @since 0.2.0
      */
+    //切换context,run
     public static void runOnContext(Context context, Runnable f) {
         Context curContext = replaceContext(context);
         try {
             f.run();
         } finally {
+            //换回来
             replaceContext(curContext);
         }
     }

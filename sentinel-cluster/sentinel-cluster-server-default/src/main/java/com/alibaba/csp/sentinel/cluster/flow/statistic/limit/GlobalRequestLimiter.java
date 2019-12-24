@@ -25,6 +25,7 @@ import com.alibaba.csp.sentinel.util.AssertUtil;
  * @author Eric Zhao
  * @since 1.4.1
  */
+//全局限流器
 public final class GlobalRequestLimiter {
 
     private static final Map<String, RequestLimiter> GLOBAL_QPS_LIMITER_MAP = new ConcurrentHashMap<>();

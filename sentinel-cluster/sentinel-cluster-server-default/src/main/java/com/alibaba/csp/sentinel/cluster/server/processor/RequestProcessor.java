@@ -26,6 +26,7 @@ import com.alibaba.csp.sentinel.cluster.response.ClusterResponse;
  * @author Eric Zhao
  * @since 1.4.0
  */
+//集群请求处理器
 public interface RequestProcessor<T, R> {
 
     /**

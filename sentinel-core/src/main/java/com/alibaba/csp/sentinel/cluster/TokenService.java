@@ -23,6 +23,7 @@ import java.util.Collection;
  * @author Eric Zhao
  * @since 1.4.0
  */
+//集群 令牌服务
 public interface TokenService {
 
     /**
@@ -33,6 +34,7 @@ public interface TokenService {
      * @param prioritized whether the request is prioritized
      * @return result of the token request
      */
+    //令牌获取
     TokenResult requestToken(Long ruleId, int acquireCount, boolean prioritized);
 
     /**
@@ -43,5 +45,6 @@ public interface TokenService {
      * @param params parameter list
      * @return result of the token request
      */
+    //参数令牌获取
     TokenResult requestParamToken(Long ruleId, int acquireCount, Collection<Object> params);
 }

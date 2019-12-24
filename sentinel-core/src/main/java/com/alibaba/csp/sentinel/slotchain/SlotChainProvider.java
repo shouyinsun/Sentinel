@@ -35,6 +35,7 @@ public final class SlotChainProvider {
      *
      * @return new created slot chain
      */
+    //spi SlotChainBuilder 构造 插槽链
     public static ProcessorSlotChain newSlotChain() {
         if (slotChainBuilder != null) {
             return slotChainBuilder.build();

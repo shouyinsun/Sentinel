@@ -90,6 +90,7 @@ public class NettyTransportServer implements ClusterTokenServer {
                     p.addLast(new NettyRequestDecoder());
                     p.addLast(new LengthFieldPrepender(2));
                     p.addLast(new NettyResponseEncoder());
+                    //tokenServerHandler 处理token获取
                     p.addLast(new TokenServerHandler(connectionPool));
                 }
             })
