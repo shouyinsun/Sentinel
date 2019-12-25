@@ -44,7 +44,7 @@ import com.alibaba.csp.sentinel.property.SentinelProperty;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
-//规则管理
+//流控规则管理
 public class FlowRuleManager {
 
     //规则map resource -> list<FlowRule>

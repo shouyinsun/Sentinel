@@ -42,6 +42,7 @@ import com.alibaba.csp.sentinel.util.AssertUtil;
  * @author qinan.qn
  * @author jialiang.linjl
  */
+//相同资源共享同一个clusterNode
 public class ClusterNode extends StatisticNode {
 
     private final String name;
@@ -65,6 +66,8 @@ public class ClusterNode extends StatisticNode {
      * at the very beginning while concurrent map will hold the lock all the time.
      * </p>
      */
+    //originName -> statisticNode
+    // 同一资源同一clusterNode 再细分origin来源
     private Map<String, StatisticNode> originCountMap = new HashMap<>();
 
     private final ReentrantLock lock = new ReentrantLock();

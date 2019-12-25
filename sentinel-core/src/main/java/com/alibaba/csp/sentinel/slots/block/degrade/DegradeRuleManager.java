@@ -41,6 +41,7 @@ import com.alibaba.csp.sentinel.util.StringUtil;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//降级规则管理
 public final class DegradeRuleManager {
 
     private static final Map<String, Set<DegradeRule>> degradeRules = new ConcurrentHashMap<>();

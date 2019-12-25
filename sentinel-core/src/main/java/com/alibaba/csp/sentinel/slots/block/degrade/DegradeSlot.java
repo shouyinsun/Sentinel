@@ -26,7 +26,7 @@ import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
  *
  * @author leyou
  */
-//降级
+//降级,blocked
 public class DegradeSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     @Override

@@ -53,6 +53,7 @@ public class ContextUtil {
     /**
      * Holds all {@link EntranceNode}. Each {@link EntranceNode} is associated with a distinct context name.
      */
+    //contextName -> EntranceNode
     private static volatile Map<String, DefaultNode> contextNameNodeMap = new HashMap<>();
 
     private static final ReentrantLock LOCK = new ReentrantLock();
@@ -112,7 +113,7 @@ public class ContextUtil {
      *               invoker/consumer separately.
      * @return The invocation context of the current thread
      */
-    public static Context enter(String name, String origin) {
+    public static Context enter(String name, String origin) {//调用上下文
         if (Constants.CONTEXT_DEFAULT_NAME.equals(name)) {
             throw new ContextNameDefineException(
                 "The " + Constants.CONTEXT_DEFAULT_NAME + " can't be permit to defined!");
@@ -138,7 +139,7 @@ public class ContextUtil {
                                 setNullContext();
                                 return NULL_CONTEXT;
                             } else {
-                                //没有,添加一个entrance node
+                                //添加一个entrance node
                                 node = new EntranceNode(new StringResourceWrapper(name, EntryType.IN), null);
                                 // 加入至全局根节点下
                                 Constants.ROOT.addChild(node);
@@ -156,6 +157,7 @@ public class ContextUtil {
             }
             //entrance node
             context = new Context(node, name);
+            //设置context的origin
             context.setOrigin(origin);
             contextHolder.set(context);
         }

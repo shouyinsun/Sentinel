@@ -28,6 +28,7 @@ import com.alibaba.csp.sentinel.util.TimeUtil;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//默认流控
 public class DefaultController implements TrafficShapingController {
 
     private static final int DEFAULT_AVG_USED_TOKENS = 0;

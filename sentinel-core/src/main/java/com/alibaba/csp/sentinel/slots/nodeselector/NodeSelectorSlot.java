@@ -129,7 +129,7 @@ public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
     /**
      * {@link DefaultNode}s of the same resource in different context.
      */
-    //默认node map
+    //defaultNode map
     // contextName -> DefaultNode
     private volatile Map<String, DefaultNode> map = new HashMap<String, DefaultNode>(10);
 
@@ -166,7 +166,8 @@ public class NodeSelectorSlot extends AbstractLinkedProcessorSlot<Object> {
                     cacheMap.put(context.getName(), node);
                     map = cacheMap;
                     // Build invocation tree
-                    //构建 调用树
+                    //构建调用树
+                    //最后node addChild
                     ((DefaultNode) context.getLastNode()).addChild(node);
                 }
 

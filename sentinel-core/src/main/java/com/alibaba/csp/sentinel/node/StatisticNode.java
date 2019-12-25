@@ -227,12 +227,13 @@ public class StatisticNode implements Node {
     }
 
     @Override
-    public double avgRt() {
+    public double avgRt() {//success 平均响应
         long successCount = rollingCounterInSecond.success();
         if (successCount == 0) {
             return 0;
         }
 
+        // 总响应时间/成功数
         return rollingCounterInSecond.rt() * 1.0 / successCount;
     }
 

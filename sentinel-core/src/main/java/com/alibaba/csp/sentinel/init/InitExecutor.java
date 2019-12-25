@@ -47,6 +47,7 @@ public final class InitExecutor {
             List<OrderWrapper> initList = new ArrayList<OrderWrapper>();
             for (InitFunc initFunc : loader) {//order
                 RecordLog.info("[InitExecutor] Found init func: " + initFunc.getClass().getCanonicalName());
+                //sort
                 insertSorted(initList, initFunc);
             }
             for (OrderWrapper w : initList) {//init
@@ -63,7 +64,7 @@ public final class InitExecutor {
         }
     }
 
-    private static void insertSorted(List<OrderWrapper> list, InitFunc func) {
+    private static void insertSorted(List<OrderWrapper> list, InitFunc func) {//sort
         int order = resolveOrder(func);
         int idx = 0;
         for (; idx < list.size(); idx++) {

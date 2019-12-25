@@ -55,6 +55,7 @@ public class DynamicSentinelProperty<T> implements SentinelProperty<T> {
         RecordLog.info("[DynamicSentinelProperty] Config will be updated to: " + newValue);
 
         value = newValue;
+        //有变更,触发监听
         for (PropertyListener<T> listener : listeners) {
             listener.configUpdate(newValue);
         }

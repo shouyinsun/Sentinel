@@ -38,6 +38,7 @@ public class DefaultSlotChainBuilder implements SlotChainBuilder {
 
     @Override
     public ProcessorSlotChain build() {
+        //DefaultProcessorSlotChain 默认的slot链处理器
         ProcessorSlotChain chain = new DefaultProcessorSlotChain();
         //NodeSelectorSlot 收集 资源 的路径,将这些资源的调用路径,以树状结构存储起来
         chain.addLast(new NodeSelectorSlot());

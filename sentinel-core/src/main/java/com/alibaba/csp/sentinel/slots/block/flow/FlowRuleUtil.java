@@ -106,8 +106,9 @@ public final class FlowRuleUtil {
                 rule.setLimitApp(RuleConstant.LIMIT_APP_DEFAULT);
             }
 
-            //生成rater TrafficShapingController
+            //根据rule生成对应的rater TrafficShapingController
             TrafficShapingController rater = generateRater(rule);
+            //设置trafficShapingController
             rule.setRater(rater);
 
             K key = groupFunction.apply(rule);
@@ -154,7 +155,7 @@ public final class FlowRuleUtil {
                     // Default mode or unknown mode: default traffic shaping controller (fast-reject).
             }
         }
-        //默认
+        //默认 DefaultController
         return new DefaultController(rule.getCount(), rule.getGrade());
     }
 

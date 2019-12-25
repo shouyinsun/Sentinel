@@ -146,7 +146,7 @@ public class CtSph implements Sph {
             return new CtEntry(resourceWrapper, null, context);
         }
 
-        // 生成 Entry 对象
+        // 生成 Entry 对象 带上下文、slotChain
         Entry e = new CtEntry(resourceWrapper, chain, context);
         try {
             // 开始执行插槽链 调用逻辑
@@ -197,6 +197,7 @@ public class CtSph implements Sph {
      * @return {@link ProcessorSlotChain} of the resource
      */
     ProcessorSlot<Object> lookProcessChain(ResourceWrapper resourceWrapper) {
+        //缓存,相同resouceWrapper是同一个slotChain
         ProcessorSlotChain chain = chainMap.get(resourceWrapper);
         if (chain == null) {
             synchronized (LOCK) {

@@ -44,7 +44,9 @@ import com.alibaba.csp.sentinel.slotchain.StringResourceWrapper;
  *
  * @author jialiang.linjl
  */
-//相同资源共享同一个 clusterNode
+//相同的资源拿到的是同一个slotChain
+// 如果获得同一个ClusterBuilderSlot对象,那么资源肯定是相同
+// 相同资源共享同一个clusterNode
 public class ClusterBuilderSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     /**

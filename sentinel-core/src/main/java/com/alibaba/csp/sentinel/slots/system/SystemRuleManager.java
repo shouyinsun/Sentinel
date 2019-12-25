@@ -63,7 +63,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
  * @author jialiang.linjl
  * @author leyou
  */
-//系统规则
+//系统规则管理
 public final class SystemRuleManager {
 
     //系统负载阈值

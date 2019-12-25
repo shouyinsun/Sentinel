@@ -28,8 +28,10 @@ import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//带当前上下文的entry
 class CtEntry extends Entry {
 
+    //parent 跟 child entry
     protected Entry parent = null;
     protected Entry child = null;
 
@@ -41,19 +43,22 @@ class CtEntry extends Entry {
         this.chain = chain;
         this.context = context;
 
-        //设置context的curEntry 或者 child
+        //设置entry,形成链
+        //上下文curEntry设置为自己
         setUpEntryFor(context);
     }
 
-    private void setUpEntryFor(Context context) {
+    private void setUpEntryFor(Context context) {//设置entry,形成链
         // The entry should not be associated to NullContext.
         if (context instanceof NullContext) {
             return;
         }
+        //this.parent 设置为当前上下文的curEntry
         this.parent = context.getCurEntry();
-        if (parent != null) {
+        if (parent != null) {//set child entry
             ((CtEntry)parent).child = this;
         }
+        //context curEntry 设置为自己
         context.setCurEntry(this);
     }
 

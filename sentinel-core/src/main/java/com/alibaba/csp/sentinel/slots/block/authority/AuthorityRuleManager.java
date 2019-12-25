@@ -37,11 +37,13 @@ import com.alibaba.csp.sentinel.property.SentinelProperty;
  * @author jialiang.linjl
  * @author Eric Zhao
  */
+//权限规则管理
 public final class AuthorityRuleManager {
 
     private static Map<String, Set<AuthorityRule>> authorityRules = new ConcurrentHashMap<>();
 
     private static final RulePropertyListener LISTENER = new RulePropertyListener();
+    //动态sentinel属性,可以增加监听器,变更时触发监听器
     private static SentinelProperty<List<AuthorityRule>> currentProperty = new DynamicSentinelProperty<>();
 
     static {

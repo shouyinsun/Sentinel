@@ -53,6 +53,7 @@ public class AuthorityDemo {
     }
 
     private static void testFor(/*@NonNull*/ String resource, /*@NonNull*/ String origin) {
+        //threadLocal 上下文
         ContextUtil.enter(resource, origin);
         Entry entry = null;
         try {

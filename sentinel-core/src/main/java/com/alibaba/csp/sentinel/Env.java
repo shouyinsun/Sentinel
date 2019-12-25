@@ -33,6 +33,7 @@ public class Env {
 
     static {
         // If init fails, the process will exit.
+        //初始化所有spi InitFunc
         InitExecutor.doInit();
     }
 

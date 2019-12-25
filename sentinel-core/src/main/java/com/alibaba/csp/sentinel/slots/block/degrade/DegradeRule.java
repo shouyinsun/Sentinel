@@ -53,6 +53,8 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author jialiang.linjl
  */
+//降级规则
+// 平均响应、异常率、异常数
 public class DegradeRule extends AbstractRule {
 
     @SuppressWarnings("PMD.ThreadPoolCreationRule")
@@ -80,6 +82,7 @@ public class DegradeRule extends AbstractRule {
     /**
      * Degrade strategy (0: average RT, 1: exception ratio, 2: exception count).
      */
+
     private int grade = RuleConstant.DEGRADE_GRADE_RT;
 
     /**
@@ -87,6 +90,7 @@ public class DegradeRule extends AbstractRule {
      *
      * @since 1.7.0
      */
+    //最小连续慢请求触发熔断
     private int rtSlowRequestAmount = RuleConstant.DEGRADE_DEFAULT_SLOW_REQUEST_AMOUNT;
 
     /**
@@ -94,6 +98,7 @@ public class DegradeRule extends AbstractRule {
      *
      * @since 1.7.0
      */
+    //最小请求数触发熔断
     private int minRequestAmount = RuleConstant.DEGRADE_DEFAULT_MIN_REQUEST_AMOUNT;
 
     public int getGrade() {

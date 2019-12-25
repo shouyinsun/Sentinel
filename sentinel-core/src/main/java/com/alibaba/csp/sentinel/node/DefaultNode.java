@@ -39,6 +39,7 @@ import com.alibaba.csp.sentinel.slots.nodeselector.NodeSelectorSlot;
  * @see NodeSelectorSlot
  */
 //默认node
+// 继承statisticNode
 public class DefaultNode extends StatisticNode {
 
     /**

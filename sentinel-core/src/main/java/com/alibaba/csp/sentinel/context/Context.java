@@ -178,10 +178,10 @@ public class Context {
      *
      * @return the parent node of the current.
      */
-    public Node getLastNode() {
-        if (curEntry != null && curEntry.getLastNode() != null) {
+    public Node getLastNode() {//最后的node
+        if (curEntry != null && curEntry.getLastNode() != null) {//当前entry的最后的node
             return curEntry.getLastNode();
-        } else {
+        } else {//没有当前entry,用entranceNode入口node
             return entranceNode;
         }
     }
